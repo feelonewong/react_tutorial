@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import Item from './Item'
 import './App.css'
 
 class App extends Component {
@@ -8,22 +9,34 @@ class App extends Component {
       inputValue: '',
       list: ['React','Vue','Angular']
     }
+    this.handleliDelete = this.handleliDelete.bind(this)
+  }
+
+  componentDidMount() {
+    console.log('componentDidMount---')
   }
 
   render() {
+    console.log('rendering--')
     const {inputValue,list} = this.state
     return (
       <div className="wrapper">
-        <input value={inputValue} type="text" onChange={this.handleChange.bind(this)}/>
+        <input value={inputValue}
+               type="text"
+               ref={(input)=>{this.input=input}}
+               onChange={this.handleChange.bind(this)}/>
         <button onClick={this.handleSubmit.bind(this)}>Submit</button>
-        <ul className="my-list">
+        <ul className="my-list" ref={(ul)=>{this.ul=ul}}>
+
           {list.map(
             (item,index)=>{
               return(
-                <li
-                  onClick={this.handleliClick.bind(this,index)}
+                <Item
                   key={index}
-                >{item}</li>
+                  index={index}
+                  content={item}
+                  handleliDelete={this.handleliDelete}
+                />
               )
             }
           )}
@@ -32,10 +45,10 @@ class App extends Component {
     )
   }
 
-  handleChange(e) {
-    const inputValue = e.target.value
+  handleChange() {
+    //const inputValue = e.target.value
     this.setState({
-      inputValue
+      inputValue:this.input.value
     })
   }
   handleSubmit(){
@@ -45,13 +58,14 @@ class App extends Component {
       this.setState({
         list,
         inputValue:''
+      },()=>{
+        console.log(this.ul.querySelectorAll('li').length)
       })
     }else{
       alert('please input some data')
     }
-
   }
-  handleliClick(index){
+  handleliDelete(index){
     var isdeleteDate = window.confirm("Are you sure delete this date?")
     if(isdeleteDate){
       const {list} = this.state
