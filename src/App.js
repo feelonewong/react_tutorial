@@ -52,11 +52,14 @@ class App extends Component {
 
   }
   handleliClick(index){
-    const {list} = this.state
-    list.splice(index,1)
-    this.setState({
-      list
-    })
+    var isdeleteDate = window.confirm("Are you sure delete this date?")
+    if(isdeleteDate){
+      const {list} = this.state
+      list.splice(index,1)
+      this.setState({
+        list
+      })
+    }
   }
 }
 
